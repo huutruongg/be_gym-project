@@ -23,7 +23,7 @@ def generate_diet_plan(gender, age, height, weight, intensity, goal, level, expe
         history=[
         ]
     )
-
+    # Write prompt to sennd to gemini
     prompt = f"Tôi là {gender}, {age} tuổi, cao {height} cm và nặng {weight} kg. Mức độ hoạt động thể dục của tôi là {intensity}. TDEE của tôi là {tdee} calo"
     if goal == 'tăng cân':
         prompt += f" và mục tiêu của tôi là {goal}."
