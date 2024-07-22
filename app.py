@@ -19,7 +19,7 @@ def get_diet_plan():
     intensity = data['intensity']
     goal = data['goal']
     level = data['level']
-    expected = data['expected']
+    expected = data.get('expected', '') 
     print(data)
     # result
     bmr = calculate_bmr(gender, weight, height, age)
@@ -79,8 +79,20 @@ def get_guide(guide_id):
 
 @app.route('/guides', methods=['POST'])
 def create_guide():
-    data = request.json
-    new_guide = InstructionalVideo(author=data['author'], title=data['title'], url_video=data['url_video'])
+    if request.content_type == 'application/json':
+        data = request.json
+    elif request.content_type == 'application/x-www-form-urlencoded' or request.content_type == 'multipart/form-data':
+        data = request.form
+    elif request.args:
+        data = request.args
+    else:
+        return jsonify({'message': 'Unsupported Media Type'}), 415
+
+    new_guide = InstructionalVideo(
+        author=data.get('author'),
+        title=data.get('title'),
+        url_video=data.get('url_video')
+    )
     db.session.add(new_guide)
     db.session.commit()
     return jsonify({'message': 'Guide created!', 'id': new_guide.id}), 201
